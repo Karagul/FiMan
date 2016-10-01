@@ -1,6 +1,8 @@
 library(shiny)
 library(shinydashboard)
 load("./data/userList.rda")
+load("./data/activityList.rda")
+load("./data/recordList.rda")
 dashboardPage(
   skin = "blue",
   
@@ -10,25 +12,18 @@ dashboardPage(
   
   dashboardSidebar(
     sidebarMenu(
-      menuItem(
-        "User", tabName = "userTab", icon=icon("child")
-      ),
-      menuItem(
-        "Activity", tabName = "activityTab", icon=icon("credit-card")
-      ),
-      menuItem(
-        "History", tabName="historyTab", icon = icon("plus")
-      ),
-      menuItem(
-        "Overview", tabName="overviewTab", icon=icon("line-chart")
-      )
+      menuItem("Welcome", tabName="welcomeTab", icon = icon("key")),
+      menuItem("Record", tabName="recordTab", icon = icon("plus")),
+      menuItem("Activity", tabName = "activityTab", icon=icon("credit-card")),
+      menuItem("User", tabName = "userTab", icon=icon("child")),
+      menuItem("Overview", tabName="overviewTab", icon=icon("line-chart"))
     )
   ),
   
   dashboardBody(
     tabItems(
       tabItem(
-        tabName = "userTab",
+        tabName = "welcomeTab",
         fluidRow({
           column(
             width = 12,
@@ -38,72 +33,35 @@ dashboardPage(
         }), 
         br(),
         br(),
-        br(),
-        br(),
         fluidRow(
-          box(
-            title = "Current users", 
-            status = "primary",
-            solidHeader = TRUE,
-            collapsible = TRUE,
+          column(width=3),
+          column(
             width=6,
-            dataTableOutput("userCurrent")
+              passwordInput("password", "Password"),
+              actionButton("loginBtn", "Login")
           ),
-          box(
-            title = "Add an user", 
-            status = "primary",
-            solidHeader = TRUE,
-            collapsible = TRUE,
-            width=3,
-            textInput("userAddName", "New user name:"),
-            actionButton("userAddBtn", "Add this user")
-          ),
-          box(
-            title = "Delete an user", 
-            status = "primary",
-            solidHeader = TRUE,
-            collapsible = TRUE,
-            width=3,
-            textInput("userDeleteName", "Delete by name:"),
-            actionButton("userDeleteBtn", "Delete this user")
-          )
+          column(width=3)
         )
+      ),
+      
+      tabItem(
+        tabName = "recordTab",
+        uiOutput("recordTabUI")
       ),
       
       tabItem(
         tabName = "activityTab",
-        fluidRow(
-          box(
-            title = "Current activities", 
-            status = "primary",
-            solidHeader = TRUE,
-            collapsible = TRUE,
-            width=6,
-            dataTableOutput("activityCurrent")
-          ),
-          box(
-            title = "Add an activity", 
-            status = "primary",
-            solidHeader = TRUE,
-            collapsible = TRUE,
-            width=3,
-            textInput("activityAddName", "New activity:"),
-            actionButton("activityAddBtn", "Add this activity")
-          ),
-          box(
-            title = "Delete an activity", 
-            status = "primary",
-            solidHeader = TRUE,
-            collapsible = TRUE,
-            width=3,
-            textInput("activityDeleteName", "Delete by name:"),
-            actionButton("activityDeleteBtn", "Delete this activity")
-          )
-        )
+        uiOutput("activityTabUI")
       ),
       
       tabItem(
-        tabName = "overviewTab"
+        tabName = "userTab",
+        uiOutput("userTabUI")
+      ),
+      
+      tabItem(
+        tabName = "overviewTab",
+        uiOutput("overviewTabUI")
       )
     )
   )
